@@ -5,9 +5,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Scanner;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class ChatClient {
-	private final static String SERVER_HOST = "192.168.0.222";
+//	private final static String SERVER_HOST = "192.168.0.222";
+	private final static String SERVER_HOST = "localhost";
 	private final static int SERVER_PORT = 5000;
 	
 	private Socket mSocket;
@@ -29,6 +35,15 @@ public class ChatClient {
 		}
 	}
 	
+	class ClientWriter extends Thread {
+		
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			super.run();
+		}
+	}
+	
 	class ClientReciver extends Thread {
 		
 		private DataInputStream mInputStream;
@@ -44,14 +59,32 @@ public class ChatClient {
 
 				System.out.println("id : " + nickName + "접속 완료");
 				
-				try {
-					Thread.sleep(5000);
-					mOutputStream.writeUTF("exit");
+				while (true) {
+					System.out.print("메세지 입력 : ");
+					Scanner in = new Scanner(System.in);
+					
+					// Json구성
+					String msg = in.nextLine();
+					long time = System.currentTimeMillis();
+					
+					MsgInfo msgInfo = new MsgInfo(nickName, msg, time);
+					Gson gson = new Gson();
+					
+					
+//					String json = "{\"nickName\":\"" + nickName + "\",\"msg\":\"" + msg + "\",\"time\":\"" + time + "\"}";
+					
+					mOutputStream.writeUTF(gson.toJson(msgInfo));
 					mOutputStream.flush();
-					System.out.println("id : " + nickName + "접속 종료");
-					System.exit(0);
-				} catch (InterruptedException e) {
 				}
+				
+//				try {
+//					Thread.sleep(5000);
+//					mOutputStream.writeUTF("exit");
+//					mOutputStream.flush();
+//					System.out.println("id : " + nickName + "접속 종료");
+//					System.exit(0);
+//				} catch (InterruptedException e) {
+//				}
 				
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -64,7 +97,11 @@ public class ChatClient {
 			try {
 				// 계속 듣기만
 				while (mInputStream != null) {
-					System.out.println(mInputStream.readUTF());
+					// json 파싱
+					Gson gson = new Gson();
+					String json = mInputStream.readUTF();
+					MsgInfo msgInfo = gson.fromJson(json, MsgInfo.class); 
+					System.out.println(msgInfo.toString());
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
