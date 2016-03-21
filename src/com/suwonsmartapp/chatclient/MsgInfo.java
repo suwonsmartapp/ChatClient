@@ -4,7 +4,7 @@ public class MsgInfo {
 	private String nickName;
 	private String message;
 	private long time;
-	
+
 	public MsgInfo(String nickName, String message, long time) {
 		this.nickName = nickName;
 		this.message = message;
