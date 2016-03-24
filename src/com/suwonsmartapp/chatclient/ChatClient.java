@@ -55,7 +55,7 @@ public class ChatClient {
                         MsgInfo msgInfo = new Gson().fromJson(json, MsgInfo.class);
                         System.out.println(msgInfo);
                     } catch (Exception e) {
-                        e.printStackTrace();
+//                        e.printStackTrace();
                     }
                 }
             } catch (IOException e) {
