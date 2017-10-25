@@ -10,7 +10,7 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class ChatClient {
-    private final static String SERVER_HOST = "localhost";
+    private final static String SERVER_HOST = "suwonsmartapp.iptime.org";
     private final static int SERVER_PORT = 5000;
     private final static String NICKNAME = "닉네임";
 
@@ -53,7 +53,7 @@ public class ChatClient {
                     String json = mInputStream.readUTF();
                     try {
                         MsgInfo msgInfo = new Gson().fromJson(json, MsgInfo.class);
-                        System.out.println(msgInfo);
+                        System.out.println(json);
                     } catch (Exception e) {
 //                        e.printStackTrace();
                     }
